@@ -1,7 +1,6 @@
 package com.example.messagemod;
 
 import com.example.messagemod.client.gui.MessageScreen;
-import com.example.messagemod.client.network.ClientMessageSender;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -14,8 +13,6 @@ public class MessageModClient implements ClientModInitializer {
 
         @Override
         public void onInitializeClient() {
-                ClientMessageSender.register();
-
                 openScreenKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                         "key.message-mod.open",
                         GLFW.GLFW_KEY_M,
