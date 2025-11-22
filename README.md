@@ -40,6 +40,8 @@ maxPoolSize=5
      text VARCHAR(256) NOT NULL
    );
    ```
+   If you see `Failed to initialize pool: Connection refused` in the logs, Postgres is not running or is bound to a different host/port.
+   Make sure the JDBC URL and credentials match your database instance.
 2. Build the mod:
    ```bash
    ./gradlew build
@@ -48,6 +50,19 @@ maxPoolSize=5
 3. Copy the produced JAR from `build/libs/` into the Minecraft `mods` folder for Fabric 1.21.8.
 4. Start the server/client; on the first run, edit `config/message-mod.properties` if needed.
 5. Join the game, press **M**, send a message, and verify the row appears in Postgres.
+
+### Local PostgreSQL quickstart (Docker)
+If you do not have Postgres installed locally, you can run it with Docker Compose:
+
+1. Start the container:
+   ```bash
+   docker compose up -d
+   ```
+   This launches Postgres 16 on `localhost:5432` with database `minecraft` and credentials `postgres` / `postgres`.
+2. (Optional) Stop and remove the container when finished:
+   ```bash
+   docker compose down
+   ```
 
 ## Troubleshooting
 - If networking seems inactive, ensure both client and server run the mod so the custom payload is registered.
