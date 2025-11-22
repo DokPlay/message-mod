@@ -27,8 +27,10 @@ public class DatabaseManager {
         overrides.put("jakarta.persistence.jdbc.url", config.getJdbcUrl());
         overrides.put("jakarta.persistence.jdbc.user", config.getUsername());
         overrides.put("jakarta.persistence.jdbc.password", config.getPassword());
-        overrides.put("hibernate.hikari.maximumPoolSize", config.getMaxPoolSize());
-        overrides.put("hibernate.hikari.minimumIdle", Math.max(1, Math.min(2, config.getMaxPoolSize())));
+        overrides.put("hibernate.hikari.maximumPoolSize", String.valueOf(config.getMaxPoolSize()));
+        overrides.put(
+                "hibernate.hikari.minimumIdle",
+                String.valueOf(Math.max(1, Math.min(2, config.getMaxPoolSize()))));
         overrides.put("hibernate.hikari.poolName", "message-mod-pool");
         overrides.put("hibernate.show_sql", "false");
         overrides.put("hibernate.format_sql", "false");
