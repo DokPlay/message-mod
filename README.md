@@ -35,7 +35,7 @@ maxPoolSize=5
 1. Ensure Postgres is reachable with a `messages` table created via:
    ```sql
    CREATE TABLE messages (
-     id   SERIAL PRIMARY KEY,
+     id   BIGSERIAL PRIMARY KEY,
      uuid UUID NOT NULL,
      text VARCHAR(256) NOT NULL
    );

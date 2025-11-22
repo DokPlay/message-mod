@@ -14,12 +14,13 @@ import jakarta.persistence.Table;
 public class MessageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "uuid", nullable = false, columnDefinition = "UUID")
     private UUID uuid;
 
-    @Column(nullable = false, length = 256)
+    @Column(name = "text", nullable = false, length = 256)
     private String text;
 
     public Long getId() {
