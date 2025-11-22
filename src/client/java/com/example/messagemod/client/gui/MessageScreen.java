@@ -36,14 +36,6 @@ public class MessageScreen extends Screen {
         }
 
         @Override
-        public void tick() {
-                super.tick();
-                if (messageField != null) {
-                        messageField.tick();
-                }
-        }
-
-        @Override
         public void resize(net.minecraft.client.Minecraft minecraft, int width, int height) {
                 String text = messageField != null ? messageField.getValue() : "";
                 super.resize(minecraft, width, height);

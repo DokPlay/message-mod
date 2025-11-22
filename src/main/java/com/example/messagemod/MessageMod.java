@@ -2,23 +2,19 @@ package com.example.messagemod;
 
 import com.example.messagemod.config.MessageModConfig;
 import com.example.messagemod.db.DatabaseManager;
-import com.example.messagemod.proto.MessageProtos;
+import com.example.messagemod.network.MessagePayload;
+import com.example.messagemod.proto.Message;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MessageMod implements ModInitializer {
         public static final String MOD_ID = "message-mod";
         public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-        public static final ResourceLocation MESSAGE_PACKET_ID = new ResourceLocation(MOD_ID, "message");
 
         private static DatabaseManager databaseManager;
 
@@ -42,15 +38,17 @@ public class MessageMod implements ModInitializer {
                         }
                 });
 
-                ServerPlayNetworking.registerGlobalReceiver(MESSAGE_PACKET_ID, this::handleIncomingMessage);
+                PayloadTypeRegistry.playC2S().register(MessagePayload.TYPE, MessagePayload.CODEC);
+
+                ServerPlayNetworking.registerGlobalReceiver(MessagePayload.TYPE, this::handleIncomingMessage);
         }
 
-        private void handleIncomingMessage(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler,
-                                           FriendlyByteBuf buf, PacketSender responseSender) {
-                byte[] payload = buf.readByteArray();
+        private void handleIncomingMessage(MessagePayload payload, ServerPlayNetworking.Context context) {
+                byte[] data = payload.payload();
+                ServerPlayer player = context.player();
                 try {
-                        MessageProtos.Message message = MessageProtos.Message.parseFrom(payload);
-                        server.execute(() -> {
+                        Message message = Message.parseFrom(data);
+                        context.server().execute(() -> {
                                 try {
                                         databaseManager.saveMessage(player.getUUID(), message.getText());
                                         LOGGER.info("Stored message from {}", player.getGameProfile().getName());

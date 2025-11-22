@@ -18,7 +18,7 @@ Fabric mod for Minecraft 1.21.8 that sends a protobuf payload from a simple clie
 ## Data Flow
 1. Press **M** in-game to open the Message Sender screen.
 2. Enter text (max 256 chars) and click **Send**.
-3. The client builds a `MessageProtos.Message` protobuf and sends it over the Fabric networking channel `message-mod:message`.
+3. The client builds a `Message` protobuf and sends it with the registered Fabric payload `message-mod:message`.
 4. The server receives the payload, decodes it with the generated protobuf class, and calls `DatabaseManager.saveMessage(playerUuid, text)`.
 5. Hibernate writes a row into `messages` with the player's UUID and the message text (trimmed to 256 chars).
 

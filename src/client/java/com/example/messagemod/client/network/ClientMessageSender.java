@@ -1,18 +1,17 @@
 package com.example.messagemod.client.network;
 
-import com.example.messagemod.MessageMod;
-import com.example.messagemod.proto.MessageProtos;
+import com.example.messagemod.network.MessagePayload;
+import com.example.messagemod.proto.Message;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
 
 public final class ClientMessageSender {
         private ClientMessageSender() {
         }
 
         public static void register() {
-                // No-op placeholder to mirror server registration
+                PayloadTypeRegistry.playC2S().register(MessagePayload.TYPE, MessagePayload.CODEC);
         }
 
         public static void send(String text) {
@@ -21,11 +20,9 @@ public final class ClientMessageSender {
                         return;
                 }
 
-                MessageProtos.Message message = MessageProtos.Message.newBuilder().setText(text).build();
+                Message message = Message.newBuilder().setText(text).build();
                 byte[] payload = message.toByteArray();
 
-                FriendlyByteBuf buffer = PacketByteBufs.create();
-                buffer.writeByteArray(payload);
-                ClientPlayNetworking.send(MessageMod.MESSAGE_PACKET_ID, buffer);
+                ClientPlayNetworking.send(new MessagePayload(payload));
         }
 }
